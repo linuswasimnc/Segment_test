@@ -9,31 +9,209 @@
   analytics.page();
   }}();
 </script>
-  </head>
-  <body>
-  <h2>Sign Up</h2>
-  <form id="signup-form">
-    <input type="text" id="name" placeholder="Full Name" required><br><br>
-    <input type="email" id="email" placeholder="Email" required><br><br>
-    <button type="submit">Sign Up</button>
-  </form>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #333;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .product {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .log {
+      background: #1e1e1e;
+      color: #00ff00;
+      padding: 15px;
+      border-radius: 4px;
+      font-family: monospace;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .log-entry {
+      margin: 5px 0;
+      padding: 5px;
+      border-left: 3px solid #00ff00;
+      padding-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛒 Simple Segment E-commerce Demo</h1>
+
+  <!-- 1. Identify User -->
+  <div class="section">
+    <h2>1. Identify User</h2>
+    <p>Method: <code>analytics.identify()</code></p>
+    <form id="signup-form">
+      <input type="text" id="name" placeholder="Your Name" required>
+      <input type="email" id="email" placeholder="Your Email" required>
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+
+  <!-- 2. Track Product View -->
+  <div class="section">
+    <h2>2. View Product</h2>
+    <p>Method: <code>analytics.track('Product Viewed')</code></p>
+    <div class="product">
+      <h3>Wireless Headphones - $99.99</h3>
+      <button onclick="viewProduct()">View Product</button>
+    </div>
+  </div>
+
+  <!-- 3. Add to Cart -->
+  <div class="section">
+    <h2>3. Add to Cart</h2>
+    <p>Method: <code>analytics.track('Product Added')</code></p>
+    <button onclick="addToCart()">Add Headphones to Cart</button>
+  </div>
+
+  <!-- 4. Checkout -->
+  <div class="section">
+    <h2>4. Complete Order</h2>
+    <p>Method: <code>analytics.track('Order Completed')</code></p>
+    <button onclick="checkout()">Complete Checkout</button>
+  </div>
+
+  <!-- 5. Custom Event -->
+  <div class="section">
+    <h2>5. Custom Event</h2>
+    <p>Method: <code>analytics.track('Custom Event')</code></p>
+    <button onclick="customEvent()">Subscribe to Newsletter</button>
+  </div>
+
+  <!-- Event Log -->
+  <div class="section">
+    <h2>📊 Event Log</h2>
+    <p>Check browser console (F12) for detailed output</p>
+    <div class="log" id="log"></div>
+  </div>
 
   <script>
-    
-    document.getElementById("signup-form").addEventListener("submit", function(e) {
+    // Helper to log events
+    function log(message, data) {
+      const logDiv = document.getElementById('log');
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = `<strong>${message}</strong><br>${JSON.stringify(data, null, 2)}`;
+      logDiv.insertBefore(entry, logDiv.firstChild);
+      console.log('Segment:', message, data);
+    }
+
+    // 1. Identify User
+    document.getElementById('signup-form').addEventListener('submit', function(e) {
       e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
 
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-
-      // Identify user in Segment
       analytics.identify(email, {
         name: name,
         email: email
       });
 
-      alert("User identified and sent to Segment!");
+      log('IDENTIFY', { name, email });
+      alert('User identified!');
     });
+
+    // 2. View Product
+    function viewProduct() {
+      analytics.track('Product Viewed', {
+        product_id: 'headphones_001',
+        name: 'Wireless Headphones',
+        price: 99.99,
+        category: 'Audio'
+      });
+
+      log('TRACK: Product Viewed', {
+        product_id: 'headphones_001',
+        name: 'Wireless Headphones',
+        price: 99.99
+      });
+    }
+
+    // 3. Add to Cart
+    function addToCart() {
+      analytics.track('Product Added', {
+        product_id: 'headphones_001',
+        name: 'Wireless Headphones',
+        price: 99.99,
+        quantity: 1
+      });
+
+      log('TRACK: Product Added', {
+        product_id: 'headphones_001',
+        quantity: 1
+      });
+      alert('Added to cart!');
+    }
+
+    // 4. Checkout
+    function checkout() {
+      analytics.track('Order Completed', {
+        order_id: 'order_' + Date.now(),
+        total: 99.99,
+        products: [{
+          product_id: 'headphones_001',
+          name: 'Wireless Headphones',
+          price: 99.99,
+          quantity: 1
+        }]
+      });
+
+      log('TRACK: Order Completed', {
+        order_id: 'order_' + Date.now(),
+        total: 99.99
+      });
+      alert('Order completed!');
+    }
+
+    // 5. Custom Event
+    function customEvent() {
+      analytics.track('Newsletter Subscribed', {
+        source: 'website',
+        timestamp: new Date().toISOString()
+      });
+
+      log('TRACK: Newsletter Subscribed', {
+        source: 'website'
+      });
+      alert('Subscribed to newsletter!');
+    }
+
+    // Log page load
+    log('PAGE LOADED', { url: window.location.href });
   </script>
 </body>
 </html>
