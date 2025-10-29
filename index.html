@@ -112,6 +112,13 @@
     <button onclick="customEvent()">Subscribe to Newsletter</button>
   </div>
 
+   <!-- 6. Group User -->
+  <div class="section">
+    <h2>6. Group User</h2>
+    <p>Method: <code>analytics.group()</code></p>
+    <button onclick="groupUser()">Join UNIVAC Working Group</button>
+  </div>
+
   <!-- Event Log -->
   <div class="section">
     <h2>📊 Event Log</h2>
@@ -209,6 +216,26 @@
       });
       alert('Subscribed to newsletter!');
     }
+
+        // 6. Group User
+    function groupUser() {
+      analytics.group('UNIVAC Working Group', {
+        principles: ['Eckert', 'Mauchly'],
+        site: 'Eckert–Mauchly Computer Corporation',
+        statedGoals: 'Develop the first commercial computer',
+        industry: 'Technology'
+      });
+
+      log('GROUP: UNIVAC Working Group', {
+        principles: ['Eckert', 'Mauchly'],
+        site: 'Eckert–Mauchly Computer Corporation',
+        statedGoals: 'Develop the first commercial computer',
+        industry: 'Technology'
+      });
+
+      alert('User grouped under UNIVAC Working Group!');
+    }
+
 
     // Log page load
     log('PAGE LOADED', { url: window.location.href });
