@@ -5,6 +5,36 @@
     <title>Segment Test Page</title>
    <script>
   !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="WwGMq86D9HOfcZj4lsi3vKz1JNCBCEuQ";;analytics.SNIPPET_VERSION="5.2.0";
+  
+  // ============================================
+  // SOURCE MIDDLEWARE: Filter 404 Pages
+  // ============================================
+  analytics.addSourceMiddleware(({ payload, next }) => {
+    const title = payload?.obj?.properties?.title;
+    
+    // Drop 404 error page events
+    if (title === 'Error 404 | Page not found' || title?.includes('404')) {
+      console.log('[Segment Middleware] 🚫 Dropping 404 event:', title);
+      return null; // Event dropped - not sent to Segment
+    }
+    
+    // Drop test user events
+    const email = payload?.obj?.traits?.email || payload?.obj?.properties?.email;
+    if (email?.endsWith('@test.com')) {
+      console.log('[Segment Middleware] 🚫 Dropping test user event:', email);
+      return null;
+    }
+    
+    // Add custom enrichment to all events
+    if (payload.obj.properties) {
+      payload.obj.properties.environment = 'production';
+      payload.obj.properties.pageLoadTime = Date.now();
+    }
+    
+    console.log('[Segment Middleware] ✅ Event passed through:', payload.obj.type);
+    next(payload); // Pass event through
+  });
+
   analytics.load("WwGMq86D9HOfcZj4lsi3vKz1JNCBCEuQ");
   analytics.page();
   }}();
@@ -65,10 +95,39 @@
       border-left: 3px solid #00ff00;
       padding-left: 10px;
     }
+    .middleware-info {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .middleware-info h3 {
+      margin-top: 0;
+      color: #856404;
+    }
+    .button-danger {
+      background: #dc3545;
+    }
+    .button-danger:hover {
+      background: #c82333;
+    }
   </style>
 </head>
 <body>
-  <h1>🛒 Simple Segment E-commerce Demo</h1>
+  <h1>🛒 Segment E-commerce Demo with Middleware</h1>
+
+  <!-- Middleware Info Banner -->
+  <div class="middleware-info">
+    <h3>🔧 Active Middleware</h3>
+    <p><strong>Source Middleware:</strong></p>
+    <ul>
+      <li>🚫 Filters out 404 error pages</li>
+      <li>🚫 Filters out test users (@test.com emails)</li>
+      <li>✨ Enriches all events with environment & timestamp</li>
+    </ul>
+    <p><em>Check browser console (F12) to see middleware in action!</em></p>
+  </div>
 
   <!-- 1. Identify User -->
   <div class="section">
@@ -79,6 +138,7 @@
       <input type="email" id="email" placeholder="Your Email" required>
       <button type="submit">Sign Up</button>
     </form>
+    <p><small>💡 Try using an email ending in @test.com to see middleware filter it out!</small></p>
   </div>
 
   <!-- 2. Track Product View -->
@@ -119,10 +179,18 @@
     <button onclick="groupUser()">Join UNIVAC Working Group</button>
   </div>
 
+  <!-- 7. Test Middleware -->
+  <div class="section">
+    <h2>7. Test Middleware Filtering</h2>
+    <p>Click these buttons to see middleware in action:</p>
+    <button onclick="simulate404()">Simulate 404 Page (Will be filtered)</button>
+    <button onclick="simulateTestUser()" class="button-danger">Sign Up as Test User (Will be filtered)</button>
+  </div>
+
   <!-- Event Log -->
   <div class="section">
     <h2>📊 Event Log</h2>
-    <p>Check browser console (F12) for detailed output</p>
+    <p>Check browser console (F12) for detailed middleware output</p>
     <div class="log" id="log"></div>
   </div>
 
@@ -149,7 +217,12 @@
       });
 
       log('IDENTIFY', { name, email });
-      alert('User identified!');
+      
+      if (email.endsWith('@test.com')) {
+        alert('⚠️ Test user detected! Middleware will filter this out.');
+      } else {
+        alert('✅ User identified!');
+      }
     });
 
     // 2. View Product
@@ -217,7 +290,7 @@
       alert('Subscribed to newsletter!');
     }
 
-        // 6. Group User
+    // 6. Group User
     function groupUser() {
       analytics.group('UNIVAC Working Group', {
         principles: ['Eckert', 'Mauchly'],
@@ -236,9 +309,39 @@
       alert('User grouped under UNIVAC Working Group!');
     }
 
+    // 7. Test Middleware Functions
+    function simulate404() {
+      // Simulate a page call with 404 title
+      analytics.page('Error Page', {
+        title: 'Error 404 | Page not found',
+        path: '/not-found',
+        url: window.location.href + '/not-found'
+      });
+
+      log('PAGE: 404 Error (FILTERED BY MIDDLEWARE)', {
+        title: 'Error 404 | Page not found'
+      });
+
+      alert('🚫 404 page event sent - Check console to see middleware filtering it!');
+    }
+
+    function simulateTestUser() {
+      analytics.identify('testuser@test.com', {
+        name: 'Test User',
+        email: 'testuser@test.com'
+      });
+
+      log('IDENTIFY: Test User (FILTERED BY MIDDLEWARE)', {
+        email: 'testuser@test.com'
+      });
+
+      alert('🚫 Test user event sent - Check console to see middleware filtering it!');
+    }
 
     // Log page load
     log('PAGE LOADED', { url: window.location.href });
+    console.log('%c🔧 Middleware Active!', 'color: #ffc107; font-size: 16px; font-weight: bold;');
+    console.log('Source Middleware: Filtering 404s and test users, enriching events');
   </script>
 </body>
 </html>
