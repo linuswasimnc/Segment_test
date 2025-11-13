@@ -231,6 +231,9 @@ document.getElementById('signup-form').addEventListener('submit', async function
     }
 
     const data = await response.json();
+console.log('JWT Token:', data.jwtToken);
+console.log('User ID:', data.userId);
+console.log('Email:', data.email);
     const jwtToken = data.jwt;
 
     // Now identify with the JWT token
