@@ -237,17 +237,16 @@ console.log('Email:', data.email);
     const jwtToken = data.jwt;
 
     // Now identify with the JWT token
-    analytics.identify(email, {
-      name: name,
-      email: email,
-      user_id: email
-    }, {
-      integrations: {
-        Intercom: {
-          user_hash: jwtToken  // Intercom uses 'user_hash' for JWT tokens
-        }
-      }
-    });
+analytics.identify(email, {
+  name: name,
+  email: email
+}, {
+  integrations: {
+    Intercom: {
+      user_hash: jwtToken
+    }
+  }
+});
 
     log('IDENTIFY', { name, email, jwt: 'token_generated' });
     
