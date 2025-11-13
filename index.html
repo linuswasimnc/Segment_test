@@ -222,7 +222,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
       body: JSON.stringify({ 
         userId: email,
         email: email,
-        //name: name
+        name: name
       })
     });
 
@@ -234,7 +234,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
 console.log('JWT Token:', data.jwtToken);
 console.log('User ID:', data.userId);
 console.log('Email:', data.email);
-    const jwtToken = data.jwt;
+    const jwtToken = data.jwtToken;
 
     // Now identify with the JWT token
 analytics.identify(email, {
