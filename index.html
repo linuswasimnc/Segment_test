@@ -214,7 +214,14 @@
       analytics.identify(email, {
         name: name,
         email: email
-      });
+      },
+                        {
+  integrations: {
+    Intercom: {
+      intercom_user_jwt: 'Jf4cIAOJhL6aL_nLTcJp1dK372MXrenyHnVIQiBG5uU'
+    }
+  }
+});
 
       log('IDENTIFY', { name, email });
       
