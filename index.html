@@ -206,32 +206,58 @@
     }
 
     // 1. Identify User
-    document.getElementById('signup-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
+    // 1. Identify User
+document.getElementById('signup-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
 
-      analytics.identify(email, {
-        name: name,
-        email: email
+  try {
+    // Call your backend to get the JWT token
+    const response = await fetch('https://your-backend-url.onrender.com/api/generate-intercom-jwt', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
       },
-                        {
-  integrations: {
-    Intercom: {
-      intercom_user_jwt: 'Jf4cIAOJhL6aL_nLTcJp1dK372MXrenyHnVIQiBG5uU'
-    }
-  }
-});
+      body: JSON.stringify({ 
+        userId: email,
+        email: email,
+        name: name
+      })
+    });
 
-      log('IDENTIFY', { name, email });
-      
-      if (email.endsWith('@test.com')) {
-        alert('⚠️ Test user detected! Middleware will filter this out.');
-      } else {
-        alert('✅ User identified!');
+    if (!response.ok) {
+      throw new Error('Failed to generate JWT token');
+    }
+
+    const data = await response.json();
+    const jwtToken = data.jwt;
+
+    // Now identify with the JWT token
+    analytics.identify(email, {
+      name: name,
+      email: email,
+      user_id: email
+    }, {
+      integrations: {
+        Intercom: {
+          user_hash: jwtToken  // Intercom uses 'user_hash' for JWT tokens
+        }
       }
     });
 
+    log('IDENTIFY', { name, email, jwt: 'token_generated' });
+    
+    if (email.endsWith('@test.com')) {
+      alert('⚠️ Test user detected! Middleware will filter this out.');
+    } else {
+      alert('✅ User identified with Intercom JWT!');
+    }
+  } catch (error) {
+    console.error('Error identifying user:', error);
+    alert('❌ Error: ' + error.message);
+  }
+});
     // 2. View Product
     function viewProduct() {
       analytics.track('Product Viewed', {
