@@ -236,6 +236,10 @@
         const data = await response.json();
         const jwtToken = data.jwt; // Backend returns { jwt: "token" }
 
+        console.log('========== JWT TOKEN ==========');
+console.log(jwtToken);
+console.log('==============================');
+
         console.log('✅ JWT Token generated successfully');
         console.log('User ID:', userId);
         console.log('Email:', email);
@@ -255,7 +259,7 @@
           }
         });
 
-        log('IDENTIFY', { userId, name, email, jwt });
+        log('IDENTIFY', { userId, name, email, jwt: 'token_generated' });
         
         if (email.endsWith('@test.com')) {
           alert('⚠️ Test user detected! Middleware will filter this out.');
