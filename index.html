@@ -134,10 +134,12 @@
     <h2>1. Identify User</h2>
     <p>Method: <code>analytics.identify()</code></p>
     <form id="signup-form">
+      <input type="text" id="userId" placeholder="Unique User ID (e.g., user123)" required>
       <input type="text" id="name" placeholder="Your Name" required>
       <input type="email" id="email" placeholder="Your Email" required>
       <button type="submit">Sign Up</button>
     </form>
+    <p><small>💡 User ID must be unique and will be used for Identity Verification</small></p>
     <p><small>💡 Try using an email ending in @test.com to see middleware filter it out!</small></p>
   </div>
 
@@ -205,61 +207,66 @@
       console.log('Segment:', message, data);
     }
 
-    // 1. Identify User
-    // 1. Identify User
-document.getElementById('signup-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
+    // 1. Identify User with Intercom JWT
+    document.getElementById('signup-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const userId = document.getElementById('userId').value.trim(); // Get unique user ID
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value.toLowerCase(); // Normalize to lowercase
 
-  try {
-    // Call your backend to get the JWT token
-    const response = await fetch('https://segment-test-backend.onrender.com/api/generate-intercom-jwt', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 
-        userId: name,
-        email: email,
-        name: name
-      })
+      try {
+        // Call backend to get the JWT token - use userId as the identifier
+        const response = await fetch('https://segment-test-backend.onrender.com/api/generate-intercom-jwt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            userId: userId,  // Use the unique user ID for JWT generation
+            email: email,
+            name: name
+          })
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Backend error: ${response.status} - ${errorText}`);
+        }
+
+        const data = await response.json();
+        const jwtToken = data.jwt; // Backend returns { jwt: "token" }
+
+        console.log('✅ JWT Token generated successfully');
+        console.log('User ID:', userId);
+        console.log('Email:', email);
+        console.log('Name:', name);
+
+        // Identify user with JWT token for Intercom Identity Verification
+        // CRITICAL: First parameter MUST match the userId used in JWT generation
+        analytics.identify(userId, {
+          name: name,
+          email: email
+        }, {
+          integrations: {
+            Intercom: {
+              user_hash: jwtToken  // Pass JWT as user_hash
+            }
+          }
+        });
+
+        log('IDENTIFY', { userId, name, email, jwt: 'token_generated' });
+        
+        if (email.endsWith('@test.com')) {
+          alert('⚠️ Test user detected! Middleware will filter this out.');
+        } else {
+          alert('✅ User identified with Intercom JWT!');
+        }
+      } catch (error) {
+        console.error('❌ Error identifying user:', error);
+        alert('❌ Error: ' + error.message);
+      }
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to generate JWT token');
-    }
-
-    const data = await response.json();
-console.log('JWT Token:', data.jwtToken);
-console.log('User ID:', data.userId);
-console.log('Email:', data.email);
-    const jwtToken = data.jwtToken;
-
-    // Now identify with the JWT token
-analytics.identify(name, {
-  name: name,
-  email: email
-}, {
-  integrations: {
-    Intercom: {
-      user_hash: jwtToken
-    }
-  }
-});
-
-    log('IDENTIFY', { name, email, jwt: 'token_generated' });
-    
-    if (email.endsWith('@test.com')) {
-      alert('⚠️ Test user detected! Middleware will filter this out.');
-    } else {
-      alert('✅ User identified with Intercom JWT!');
-    }
-  } catch (error) {
-    console.error('Error identifying user:', error);
-    alert('❌ Error: ' + error.message);
-  }
-});
     // 2. View Product
     function viewProduct() {
       analytics.track('Product Viewed', {
@@ -333,12 +340,11 @@ analytics.identify(name, {
         statedGoals: 'Develop the first commercial computer',
         industry: 'Technology',
         website: 'https://eckert-mauchly.com', 
-        plan: 'Enterprise',                                 // Company Plan
+        plan: 'Enterprise',
         monthly_spend: 12000,  
         createdAt: '2025-11-04T17:38:41.990Z',
         description: 'This is the company that aims to do much higher than expected',
         name: 'Great company'
-        
       });
 
       log('GROUP: UNIVAC Working Group', {
@@ -347,12 +353,11 @@ analytics.identify(name, {
         statedGoals: 'Develop the first commercial computer',
         industry: 'Technology',
         website: 'https://eckert-mauchly.com', 
-        plan: 'Enterprise',                                 // Company Plan
+        plan: 'Enterprise',
         monthly_spend: 12000,
         createdAt: '2025-11-04T17:38:41.990Z',
         description: 'This is the company that aims to do much higher than expected',
         name: 'Great company'
-      
       });
 
       alert('User grouped under UNIVAC Working Group!');
@@ -360,7 +365,6 @@ analytics.identify(name, {
 
     // 7. Test Middleware Functions
     function simulate404() {
-      // Simulate a page call with 404 title
       analytics.page('Error Page', {
         title: 'Error 404 | Page not found',
         path: '/not-found',
