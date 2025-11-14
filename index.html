@@ -255,7 +255,7 @@
           }
         });
 
-        log('IDENTIFY', { userId, name, email, jwt: 'token_generated' });
+        log('IDENTIFY', { userId, name, email, jwt });
         
         if (email.endsWith('@test.com')) {
           alert('⚠️ Test user detected! Middleware will filter this out.');
