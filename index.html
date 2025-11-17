@@ -249,15 +249,28 @@ console.log('==============================');
         // Identify user with JWT token for Intercom Identity Verification
         // CRITICAL: First parameter MUST match the userId used in JWT generation
         analytics.identify(userId, {
-          name: name,
-          email: email
-        }, {
-          integrations: {
-            Intercom: {
-              intercom_user_jwt: jwtToken  // Pass JWT as user_hash
-            }
-          }
-        });
+  name: name,
+  email: email,
+  company: {
+    id: 'UNIVAC Working Group',
+    name: 'Great company',
+    plan: 'Enterprise',
+    industry: 'Technology',
+    monthly_spend: 12000,
+    website: 'https://eckert-mauchly.com',
+    created_at: '2025-11-04T17:38:41.990Z',
+    description: 'This is the company that aims to do much higher than expected',
+    site: 'Eckert–Mauchly Computer Corporation',
+    statedGoals: 'Develop the first commercial computer',
+    principles: ['Eckert', 'Mauchly']
+  }
+}, {
+  integrations: {
+    Intercom: {
+      intercom_user_jwt: jwtToken
+    }
+  }
+});
 
         log('IDENTIFY', { userId, name, email, jwt: 'token_generated' });
         
