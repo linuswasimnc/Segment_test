@@ -251,7 +251,10 @@ console.log('==============================');
         analytics.identify(userId, {
   name: name,
   email: email,
-  Role: 'Admin'
+          "Custom_traits":{
+            "Role": "Admin"
+          }
+  
 }, {
   integrations: {
     Intercom: {
