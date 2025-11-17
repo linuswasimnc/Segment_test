@@ -249,11 +249,10 @@ console.log('==============================');
         // Identify user with JWT token for Intercom Identity Verification
         // CRITICAL: First parameter MUST match the userId used in JWT generation
         analytics.identify(userId, {
-  name: name,
-  email: email,
-          "Custom_traits":{
-            "Role": "Admin"
-          }
+          name: name,
+          email: email,
+          Role: "Admin"
+          
   
 }, {
   integrations: {
