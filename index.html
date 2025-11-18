@@ -262,11 +262,13 @@ console.log('==============================');
   }
 });
 
-        if (window.Intercom) {
-  window.Intercom('update', {
-    user_hash: jwtToken
-  });
-}
+        setTimeout(() => {
+  if (window.Intercom) {
+    window.Intercom('update', {
+      user_hash: jwtToken
+    });
+  }
+}, 3000);
 
         log('IDENTIFY', { userId, name, email, jwt: 'token_generated' });
         
