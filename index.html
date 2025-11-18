@@ -262,13 +262,15 @@ console.log('==============================');
   }
 });
 
-        setTimeout(() => {
-  if (window.Intercom) {
-    window.Intercom('update', {
-      user_hash: jwtToken
-    });
-  }
-}, 3000);
+if (window.Intercom) {
+  window.Intercom('boot', {
+    app_id: 'okb0ngs6',  // Your Intercom app ID
+    user_id: userId,
+    email: email,
+    name: name,
+    user_hash: jwtToken
+  });
+}
 
         log('IDENTIFY', { userId, name, email, jwt: 'token_generated' });
         
