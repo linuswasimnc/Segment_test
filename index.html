@@ -265,15 +265,24 @@ console.log('==============================');
   }
 });*/
 
-(window.Intercom){
-  window.Intercom('boot', {
-    app_id: 'okb0ngs6',  // Your Intercom app ID
-    user_id: email,
-    email: email,
-    name: name,
-    user_hash: jwtToken
-  });
-}
+if (window.Intercom) {
+      window.Intercom('boot', {
+        api_base: "https://api-iam.intercom.io",
+        app_id: 'okb0ngs6',
+        user_id: email,
+        email: email,
+        name: name,
+        user_hash: jwtToken,
+        created_at: Math.floor(Date.now() / 1000)
+      });
+      console.log('✅ Intercom booted successfully');
+    } else {
+      console.error('❌ Intercom not loaded');
+    }
+
+    alert('✅ Success!');
+
+  } 
 
         log('IDENTIFY', { userId, name, email, jwt: 'token_generated' });
         
