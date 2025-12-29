@@ -3,6 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <title>Segment Test Page</title>
+//Atribution loading snippet 
+
+    <script type="text/javascript">!function(){var i="Attribution",Attribution=window[i]=window[i]||[];if(!Attribution.initialize)if(Attribution.invoked)window.console&&console.error&&console.error("Attribution snippet included twice.");else{Attribution.invoked=!0;Attribution.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","setAnonymousId","register"];Attribution.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){n.push({__t:"bpc",c:void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);Attribution.push(n);return Attribution}};for(var n=0;n<Attribution.methods.length;n++){var key=Attribution.methods[n];Attribution[key]=Attribution.factory(key)}Attribution.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://scripts.attributionapp.com/v3/attribution.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);Attribution._loadOptions=n||{};Attribution._loadOptions.projectId=key};;Attribution.SNIPPET_VERSION="5.2.1";
+Attribution.load("1v6BJdx7LMY-uBnBGlf6jA");
+Attribution.page();
+}}();</script>
+    
    <script>
   !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="WwGMq86D9HOfcZj4lsi3vKz1JNCBCEuQ";;analytics.SNIPPET_VERSION="4.12.0";
 
@@ -288,6 +295,12 @@ console.log('==============================');
         price: 99.99,
         category: 'Audio'
       });
+      
+ // 2. View Product with Attribution 
+    Attribution.track("Completed Purchase", {
+    revenue: "79.99"
+});
+      
 
       log('TRACK: Product Viewed', {
         product_id: 'headphones_001',
