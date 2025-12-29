@@ -352,6 +352,11 @@ console.log('==============================');
         timestamp: new Date().toISOString()
       });
 
+      Attribution.track("Text Sent", {
+        source: 'website',
+        timestamp: new Date().toISOString()
+      });
+
       log('TRACK: Newsletter Subscribed', {
         source: 'website'
       });
