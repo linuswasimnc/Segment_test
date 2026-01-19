@@ -295,20 +295,20 @@ console.log('==============================');
       analytics.track('Product Viewed', {
         product_id: 'headphones_001',
         name: 'Wireless Headphones',
-        price: 99.99,
+        total: 99.99,
         category: 'Audio'
       });
       
  // 2. View Product with Attribution 
     Attribution.track("Completed Purchase", {
-    price: "79.99"
+    total: "79.99"
 });
       
 
       log('TRACK: Product Viewed', {
         product_id: 'headphones_001',
         name: 'Wireless Headphones',
-        price: 99.99
+        total: 99.99
       });
     }
 
@@ -317,7 +317,7 @@ console.log('==============================');
       analytics.track('Product Added', {
         product_id: 'headphones_001',
         name: 'Wireless Headphones',
-        price: 99.99,
+        total: 99.99,
         quantity: 1
       });
 
@@ -336,7 +336,7 @@ console.log('==============================');
         products: [{
           product_id: 'headphones_001',
           name: 'Wireless Headphones',
-          price: 99.99,
+          total: 99.99,
           quantity: 1
         }]
       });
