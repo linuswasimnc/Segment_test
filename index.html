@@ -318,6 +318,7 @@ console.log('==============================');
         product_id: 'headphones_001',
         name: 'Wireless Headphones',
         total: 99.99,
+        
         quantity: 1
       });
 
@@ -350,9 +351,13 @@ console.log('==============================');
 
     // 5. Custom Event
     function customEvent() {
-      analytics.track('Newsletter Subscribed', {
-        source: 'website',
-        timestamp: new Date().toISOString()
+      analytics.track('Stripe Token Aquired', {
+        product_id: 'headphones_001',
+        name: 'Wireless Headphones',
+        total: 99.99,
+        value: 99.99,
+        
+        quantity: 1
       });
 
       Attribution.track("Text Sent", {
@@ -360,10 +365,10 @@ console.log('==============================');
         timestamp: new Date().toISOString()
       });
 
-      log('TRACK: Newsletter Subscribed', {
-        source: 'website'
+      log('TRACK: Stripe Token Aquired', {order_id: 'order_' + Date.now(),
+        total: 99.99
       });
-      alert('Subscribed to newsletter!');
+      alert('Stripe token Aquired event generated');
     }
 
     // 6. Group User
