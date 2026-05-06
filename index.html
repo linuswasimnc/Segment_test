@@ -3,12 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <title>Segment Test Page</title>
-//Atribution loading snippet 
-
-    <script type="text/javascript">!function(){var i="Attribution",Attribution=window[i]=window[i]||[];if(!Attribution.initialize)if(Attribution.invoked)window.console&&console.error&&console.error("Attribution snippet included twice.");else{Attribution.invoked=!0;Attribution.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","setAnonymousId","register"];Attribution.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){n.push({__t:"bpc",c:void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);Attribution.push(n);return Attribution}};for(var n=0;n<Attribution.methods.length;n++){var key=Attribution.methods[n];Attribution[key]=Attribution.factory(key)}Attribution.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://scripts.attributionapp.com/v3/attribution.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);Attribution._loadOptions=n||{};Attribution._loadOptions.projectId=key};;Attribution.SNIPPET_VERSION="5.2.1";
-Attribution.load("EC0T1lB9lWuWlAl7JmjLSc1OasfbIDX7");
-Attribution.page();
-}}();</script>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '828694573494257');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=828694573494257&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 
     
    <script>
